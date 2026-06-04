@@ -24,16 +24,16 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       body: GridView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 20, 16, 32),
+        padding: const EdgeInsets.fromLTRB(12, 20, 12, 32),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2, // 每行固定 2 个大圆
-          mainAxisSpacing: 24,
-          crossAxisSpacing: 16,
-          childAspectRatio: 0.78,
+          crossAxisCount: 3,
+          mainAxisSpacing: 20,
+          crossAxisSpacing: 10,
+          childAspectRatio: 0.76,
         ),
         itemCount: items.length,
         itemBuilder: (context, index) {
-          return Center(child: HotpotItemWidget(item: items[index]));
+          return Center(child: HotpotItemWidget(item: items[index], diameter: 95));
         },
       ),
     );

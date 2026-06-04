@@ -6,11 +6,21 @@ import '../services/feedback_service.dart';
 class HotpotItemWidget extends StatefulWidget {
   final HotpotItem item;
   final double diameter;
+  final HotpotState? displayState;
+  final int? remainingSeconds;
+  final int? overtimeSeconds;
+  final VoidCallback? onTapOverride;
+  final VoidCallback? onLongPressOverride;
 
   const HotpotItemWidget({
     super.key,
     required this.item,
     this.diameter = 130,
+    this.displayState,
+    this.remainingSeconds,
+    this.overtimeSeconds,
+    this.onTapOverride,
+    this.onLongPressOverride,
   });
 
   @override
@@ -29,6 +39,14 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
   static const Color kYellowDim = Color(0xFF7A6300);
   static const Color kGreen = Color(0xFF4CD964);
   static const Color kRed = Color(0xFFFF3B30);
+
+  bool get _isExternallyControlled => widget.displayState != null;
+
+  HotpotState get _displayState => widget.displayState ?? _state;
+
+  int get _displayRemaining => widget.remainingSeconds ?? _remaining;
+
+  int get _displayOvertime => widget.overtimeSeconds ?? _overtime;
 
   @override
   void initState() {
@@ -57,6 +75,10 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
   // ---------- 状态机 ----------
 
   void _onTap() {
+    if (_isExternallyControlled) {
+      widget.onTapOverride?.call();
+      return;
+    }
     if (_state == HotpotState.idle) {
       _start();
     } else {
@@ -138,7 +160,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
   // ---------- 颜色 / 文本计算 ----------
 
   Color _ringColor(double t) {
-    switch (_state) {
+    switch (_displayState) {
       case HotpotState.idle:
         return Colors.black;
       case HotpotState.counting:
@@ -161,15 +183,15 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
 
   /// 中央叠加层文本（null 表示不显示）
   Widget? _centerOverlay() {
-    switch (_state) {
+    switch (_displayState) {
       case HotpotState.idle:
         return null;
       case HotpotState.counting:
         return Text(
-          _fmt(_remaining),
+          _fmt(_displayRemaining),
           style: const TextStyle(
             color: Colors.white,
-            fontSize: 30,
+            fontSize: 24,
             fontWeight: FontWeight.w900,
           ),
         );
@@ -182,7 +204,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
               '可吃!',
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 26,
+                fontSize: 20,
                 fontWeight: FontWeight.w900,
               ),
             ),
@@ -196,15 +218,15 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
               '太老了!',
               style: TextStyle(
                 color: kRed,
-                fontSize: 22,
+                fontSize: 18,
                 fontWeight: FontWeight.w900,
               ),
             ),
             Text(
-              '-${_fmt(_overtime)}',
+              '-${_fmt(_displayOvertime)}',
               style: const TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -218,24 +240,41 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
   Widget _avatar() {
     final d = widget.diameter;
     if (widget.item.imagePath != null && widget.item.imagePath!.isNotEmpty) {
-      return Image.asset(
-        widget.item.imagePath!,
+      return Container(
         width: d,
         height: d,
-        fit: BoxFit.cover,
-        errorBuilder: (context, error, stack) => _emojiAvatar(d),
+        color: const Color(0xFF2A2A2A),
+        child: Image.asset(
+          widget.item.imagePath!,
+          width: d,
+          height: d,
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stack) => _emojiAvatar(d),
+        ),
       );
     }
     return _emojiAvatar(d);
   }
 
   Widget _emojiAvatar(double d) {
+    final showName = widget.item.emoji.isEmpty;
     return Container(
       width: d,
       height: d,
       color: const Color(0xFF2A2A2A),
       alignment: Alignment.center,
-      child: Text(widget.item.emoji, style: TextStyle(fontSize: d * 0.42)),
+      padding: EdgeInsets.all(d * 0.12),
+      child: Text(
+        showName ? widget.item.name : widget.item.emoji,
+        maxLines: showName ? 2 : 1,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: showName ? d * 0.18 : d * 0.42,
+          fontWeight: showName ? FontWeight.w800 : FontWeight.normal,
+        ),
+      ),
     );
   }
 
@@ -246,20 +285,25 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
 
     return GestureDetector(
       onTap: _onTap,
-      onLongPress: _reset,
+      onLongPress: _isExternallyControlled
+          ? widget.onLongPressOverride ?? widget.onTapOverride
+          : _reset,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           AnimatedBuilder(
             animation: _blink,
             builder: (context, _) {
-              final color = _ringColor(_blink.value);
+              final pulse = _isExternallyControlled
+                  ? (_displayState == HotpotState.idle ? 0.0 : 1.0)
+                  : _blink.value;
+              final color = _ringColor(pulse);
               return Container(
                 width: d + 22,
                 height: d + 22,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  boxShadow: _state == HotpotState.idle
+                  boxShadow: _displayState == HotpotState.idle
                       ? null
                       : [
                           BoxShadow(
@@ -293,19 +337,19 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
               );
             },
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 6),
           Text(
             widget.item.name,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 2),
           Text(
             '推荐 ${_fmt(widget.item.targetSeconds)}',
-            style: TextStyle(color: Colors.grey[400], fontSize: 13),
+            style: TextStyle(color: Colors.grey[400], fontSize: 11),
           ),
         ],
       ),

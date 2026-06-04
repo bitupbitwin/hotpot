@@ -6,9 +6,7 @@ import 'services/feedback_service.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // 锁定竖屏，仅手机使用
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   await FeedbackService.init();
   runApp(const HotpotApp());
 }

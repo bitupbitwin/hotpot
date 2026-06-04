@@ -12,6 +12,7 @@ class HotpotItem {
   final String name;
   final String category;
   final int targetSeconds; // 推荐煮制时间（秒）
+  final List<String> aliases;
 
   /// 本地图片路径（如 assets/images/maodu.png），为空时用 emoji 兜底
   final String? imagePath;
@@ -24,6 +25,7 @@ class HotpotItem {
     required this.name,
     required this.category,
     required this.targetSeconds,
+    this.aliases = const [],
     this.imagePath,
     this.emoji = '🍲',
   });
@@ -34,8 +36,43 @@ class HotpotItem {
       name: json['name'] as String,
       category: json['category'] as String? ?? '',
       targetSeconds: json['timeInSeconds'] as int,
+      aliases: (json['aliases'] as List<dynamic>? ?? const [])
+          .map((alias) => alias.toString())
+          .toList(),
       imagePath: json['imagePath'] as String?,
       emoji: json['emoji'] as String? ?? '🍲',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'category': category,
+      'timeInSeconds': targetSeconds,
+      'aliases': aliases,
+      'imagePath': imagePath,
+      'emoji': emoji,
+    };
+  }
+
+  HotpotItem copyWith({
+    String? id,
+    String? name,
+    String? category,
+    int? targetSeconds,
+    List<String>? aliases,
+    String? imagePath,
+    String? emoji,
+  }) {
+    return HotpotItem(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      category: category ?? this.category,
+      targetSeconds: targetSeconds ?? this.targetSeconds,
+      aliases: aliases ?? this.aliases,
+      imagePath: imagePath ?? this.imagePath,
+      emoji: emoji ?? this.emoji,
     );
   }
 }

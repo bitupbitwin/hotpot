@@ -195,10 +195,10 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
         return AnimatedBuilder(
           animation: _blink,
           builder: (context, child) => Opacity(
-            opacity: 0.4 + 0.6 * _blink.value,
+            opacity: 0.9,
             child: _positionedOverlayText(
-              topText: '可吃!',
-              bottomText: '+${_fmt(_displayOvertime)}',
+              topText: '+${_fmt(_displayOvertime)}',
+              bottomText: '可吃!',
               topColor: Colors.white,
               bottomColor: Colors.white,
             ),
@@ -206,10 +206,10 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
         );
       case HotpotState.overcooked:
         return _positionedOverlayText(
-          topText: '太老了!',
-          bottomText: '+${_fmt(_displayOvertime)}',
-          topColor: kRed,
-          bottomColor: Colors.white,
+          topText: '+${_fmt(_displayOvertime)}',
+          bottomText: '太老了!',
+          topColor: Colors.white,
+          bottomColor: kRed,
         );
     }
   }
@@ -228,7 +228,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
         alignment: Alignment.center,
         children: [
           Positioned(
-            top: d * 0.17,
+            top: d * 0.04,
             left: d * 0.08,
             right: d * 0.08,
             child: Text(
@@ -237,15 +237,15 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
               overflow: TextOverflow.ellipsis,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: topColor,
-                fontSize: d * 0.17,
-                fontWeight: FontWeight.w700,
+                color: topColor.withValues(alpha: 0.9),
+                fontSize: d * 0.34,
+                fontWeight: FontWeight.w900,
               ),
             ),
           ),
           if (bottomText != null)
             Positioned(
-              bottom: d * 0.17,
+              bottom: d * 0.05,
               left: d * 0.08,
               right: d * 0.08,
               child: Text(
@@ -254,9 +254,9 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: bottomColor,
-                  fontSize: d * 0.15,
-                  fontWeight: FontWeight.w600,
+                  color: bottomColor.withValues(alpha: 0.9),
+                  fontSize: d * 0.22,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
             ),

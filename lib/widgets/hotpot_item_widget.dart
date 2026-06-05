@@ -202,6 +202,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
               topColor: Colors.white,
               bottomColor: Colors.white,
               topScale: 0.29,
+              topOffsetScale: 0.09,
               bottomOffsetScale: 0.02,
             ),
           ),
@@ -213,6 +214,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
           topColor: Colors.white,
           bottomColor: kRed,
           topScale: 0.29,
+          topOffsetScale: 0.09,
           bottomOffsetScale: 0.02,
         );
     }
@@ -224,6 +226,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
     String? bottomText,
     Color bottomColor = Colors.white,
     double topScale = 0.3,
+    double topOffsetScale = 0.04,
     double bottomOffsetScale = 0,
   }) {
     final d = widget.diameter;
@@ -234,7 +237,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
         alignment: Alignment.center,
         children: [
           Positioned(
-            top: d * 0.04,
+            top: d * topOffsetScale,
             left: d * 0.08,
             right: d * 0.08,
             child: Text(
@@ -246,6 +249,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
                 color: topColor.withValues(alpha: 0.9),
                 fontSize: d * topScale,
                 fontWeight: FontWeight.w900,
+                height: 1.05,
               ),
             ),
           ),

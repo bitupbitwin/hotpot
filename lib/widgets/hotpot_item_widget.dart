@@ -197,19 +197,23 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
           builder: (context, child) => Opacity(
             opacity: 0.9,
             child: _positionedOverlayText(
-              topText: '+${_fmt(_displayOvertime)}',
+              topText: _fmt(_displayOvertime),
               bottomText: '可吃!',
               topColor: Colors.white,
               bottomColor: Colors.white,
+              topScale: 0.29,
+              bottomOffsetScale: 0.02,
             ),
           ),
         );
       case HotpotState.overcooked:
         return _positionedOverlayText(
-          topText: '+${_fmt(_displayOvertime)}',
+          topText: _fmt(_displayOvertime),
           bottomText: '太老了!',
           topColor: Colors.white,
           bottomColor: kRed,
+          topScale: 0.29,
+          bottomOffsetScale: 0.02,
         );
     }
   }
@@ -219,6 +223,8 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
     required Color topColor,
     String? bottomText,
     Color bottomColor = Colors.white,
+    double topScale = 0.3,
+    double bottomOffsetScale = 0,
   }) {
     final d = widget.diameter;
     return SizedBox(
@@ -238,14 +244,14 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: topColor.withValues(alpha: 0.9),
-                fontSize: d * 0.34,
+                fontSize: d * topScale,
                 fontWeight: FontWeight.w900,
               ),
             ),
           ),
           if (bottomText != null)
             Positioned(
-              bottom: d * 0.05,
+              bottom: d * bottomOffsetScale,
               left: d * 0.08,
               right: d * 0.08,
               child: Text(

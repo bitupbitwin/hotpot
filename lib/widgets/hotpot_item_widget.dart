@@ -221,7 +221,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
     required Color topColor,
     String? bottomText,
     Color bottomColor = Colors.white,
-    double topScale = 0.3,
+    double topScale = 0.26,
     double bottomOffsetScale = 0,
   }) {
     final d = widget.diameter;
@@ -260,7 +260,7 @@ class _HotpotItemWidgetState extends State<HotpotItemWidget>
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: bottomColor.withValues(alpha: 0.9),
-                  fontSize: d * 0.22,
+                  fontSize: d * 0.18,
                   fontWeight: FontWeight.w800,
                 ),
               ),

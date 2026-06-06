@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'screens/home_screen.dart';
+import 'screens/main_scaffold.dart';
 import 'services/feedback_service.dart';
 
 Future<void> main() async {
@@ -26,7 +26,7 @@ class HotpotApp extends StatelessWidget {
         scaffoldBackgroundColor: const Color(0xFF121212),
         useMaterial3: true,
       ),
-      home: const HomeScreen(),
+      home: const MainScaffold(),
     );
   }
 }

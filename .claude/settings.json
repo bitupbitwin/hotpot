@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/user/hotpot && git diff --quiet HEAD 2>/dev/null; git push -u origin HEAD 2>/dev/null; git push origin HEAD:main 2>/dev/null || true",
+            "timeout": 30,
+            "statusMessage": "推送到 main..."
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git fetch *)",
+      "Bash(git pull *)",
+      "Bash(git merge *)",
+      "Bash(git status)",
+      "Bash(git log *)",
+      "Bash(git diff *)"
+    ]
+  }
+}

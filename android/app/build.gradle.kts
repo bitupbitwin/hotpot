@@ -50,9 +50,9 @@ android {
                 signingConfigs.getByName("release")
             else
                 signingConfigs.getByName("debug")
-            isMinifyEnabled = true
-            isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // Flutter 项目关闭混淆，避免 R8 裁掉引擎代码导致启动崩溃
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }

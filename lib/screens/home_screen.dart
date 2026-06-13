@@ -540,7 +540,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               crossAxisCount: 2,
                               mainAxisSpacing: 8,
                               crossAxisSpacing: 8,
-                              mainAxisExtent: 54,
+                              mainAxisExtent: 48,
                             ),
                         itemCount: _visibleItems.length,
                         itemBuilder: (context, index) {
@@ -819,45 +819,38 @@ class _MenuItemTile extends StatelessWidget {
         child: Stack(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
               child: Row(
                 children: [
-                  _MenuAvatar(item: item, size: 36),
-                  const SizedBox(width: 6),
+                  _MenuAvatar(item: item, size: 34),
+                  const SizedBox(width: 7),
                   Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        Text(
-                          item.name,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w800,
+                        Expanded(
+                          child: Text(
+                            item.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w800,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 2),
-                        Text(
-                          '推荐 ${_formatSeconds(item.targetSeconds)}',
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: Colors.grey[500], fontSize: 10),
-                        ),
+                        if (quantity > 1)
+                          Text(
+                            'x$quantity',
+                            style: const TextStyle(
+                              color: Color(0xFFFFCC00),
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                            ),
+                          ),
                       ],
                     ),
                   ),
-                  if (quantity > 1)
-                    Text(
-                      'x$quantity',
-                      style: const TextStyle(
-                        color: Color(0xFFFFCC00),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
                 ],
               ),
             ),
@@ -876,14 +869,6 @@ class _MenuItemTile extends StatelessWidget {
     );
   }
 
-  String _formatSeconds(int seconds) {
-    final minutes = seconds ~/ 60;
-    final rest = seconds % 60;
-    if (minutes > 0) {
-      return '$minutes:${rest.toString().padLeft(2, '0')}';
-    }
-    return '${seconds}s';
-  }
 }
 
 class _MenuAvatar extends StatelessWidget {
